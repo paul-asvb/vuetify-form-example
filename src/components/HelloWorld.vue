@@ -1,23 +1,7 @@
 <template>
-  <v-col class="roi-observation bg-color-dark-black-light">
-    <p class="color-white-light" style="margin-bottom:0px;">
-      chip group
-    </p>
-    <v-chip-group :value="chipGroupItems" active-class="primary" column>
-      <v-chip
-        v-for="tag in chipGroupItems"
-        :key="tag.text"
-        color="black"
-        small
-        auto-select-first="true"
-        :value="tag.text"
-        @click="chipGroupItems = tag.text"
-      >
-        <span>{{ tag.text }}</span>
-      </v-chip>
-    </v-chip-group>
-
-    <p class="color-white-light" style="margin-bottom:0px;">
+<div>
+  <v-col style="background:grey;">
+   <p style="margin-bottom:0px;">
       combobox
     </p>
     <v-combobox
@@ -32,9 +16,6 @@
       solo
       flat
       full-width
-      background-color="grey"
-      color="black"
-      item-color="black"
     >
       <template #selection="data">
         <v-chip
@@ -43,7 +24,6 @@
           v-bind="data.attrs"
           :input-value="data.selected"
           :disabled="data.disabled"
-          color="blue"
           small
           @click:close="data.parent.selectItem(data.item)"
         >
@@ -51,7 +31,29 @@
         </v-chip>
       </template>
     </v-combobox>
+
   </v-col>
+   <v-col style="background:lightblue;">
+   
+ 
+     <p class="color-white-light" style="margin-bottom:0px;">
+      chip group
+    </p>
+    <v-chip-group :value="chipGroupModel" active-class="primary" column>
+      <v-chip
+        v-for="tag in chipGroupItems"
+        :key="tag.text"
+        small
+        auto-select-first="true"
+        :value="tag.value"
+        @click="chipGroupModel = tag.text"
+      >
+        <span>{{ tag.text }}</span>
+      </v-chip>
+    </v-chip-group>
+
+  </v-col>
+</div>
 </template>
 <script>
 
@@ -59,19 +61,20 @@ export default {
 
   data: () => ({
 comboBoxModel:null,
-    comboBoxItem: [],
+chipGroupModel:null,
+    comboBoxItem: ["item-1","item-2","item-3","item-4"],
     chipGroupItems: [
       {
-        text: "Hyperdense",
-        value: "hyperdense"
+        text: "item-text-1",
+        value: "item-value-1"
       },
       {
-        text: "Hypodense",
-        value: "hypodense"
+        text: "item-text-2",
+        value: "item-value-2"
       },
       {
-        text: "Isodense",
-        value: "isodense"
+        text: "item-text-3",
+        value: "item-value-4"
       }
     ]
   }),
