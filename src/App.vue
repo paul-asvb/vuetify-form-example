@@ -124,7 +124,7 @@ export default {
                 chipItemProps:
                   {
                     filter: true,
-                    close: true,
+                    // close: true,
                   }
               }
           },

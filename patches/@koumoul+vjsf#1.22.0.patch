@@ -47,8 +47,9 @@ Index: \@koumoul\vjsf\lib\mixins\SelectProperty.js
          returnObject: this.returnObject
        }
 -      if (this.fromUrlWithQuery || (this.rawSelectItems && this.rawSelectItems.length > 20)) {
+-        tag = 'v-autocomplete'
 +      if (this.fromUrlWithQuery || (this.rawSelectItems && this.rawSelectItems.length > 20) || this.display === 'autocomplete') {
-         tag = 'v-autocomplete'
++        tag = 'v-combobox'
 +        delete scopedSlots.selection // otherwise it prevents the "chips" prop of  v-autocomplete
          props.noDataText = this.fullOptions.messages.noData
          props.placeholder = this.fullOptions.messages.search
