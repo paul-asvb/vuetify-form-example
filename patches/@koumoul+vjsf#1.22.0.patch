@@ -1,0 +1,96 @@
+Index: \@koumoul\vjsf\lib\mixins\SelectProperty.js
+===================================================================
+--- \@koumoul\vjsf\lib\mixins\SelectProperty.js
++++ \@koumoul\vjsf\lib\mixins\SelectProperty.js
+@@ -219,8 +219,25 @@
+       return [h('v-radio-group', { props, on }, [
+         ...this.selectItems.map(item => this.renderRadioItem(h, item)), this.renderTooltip(h, 'append')
+       ])]
+     },
++    renderChipItem(h, item) {
++      const label = item[this.itemTitle] || item[this.itemKey]
++      const value = item[this.itemKey]
++      return h('v-chip', { props: { ...this.fullOptions.chipItemProps, value } }, [label])
++    },
++    renderChipGroup(h) {
++      const props = { ...this.commonFieldProps, ...this.fullOptions.chipGroupProps, multiple: this.fullSchema.type === 'array' }
++      const on = {
++        change: value => {
++          this.input(value)
++          this.change(value)
++        }
++      }
++      return [h('v-chip-group', { props, on }, [
++        ...this.selectItems.map(item => this.renderChipItem(h, item)), this.renderTooltip(h, 'append') // tooltip is useless - VChipGroup does not have any suitable slots
++      ])]
++    },
+     renderSelectProp(h) {
+       if (!this.isSelectProp) return
+ 
+       // radio cannot be applied on an array
+@@ -235,8 +252,12 @@
+       if (['checkbox', 'switch'].includes(this.display)) {
+         return this.renderSelectionControlGroup(h)
+       }
+ 
++      if (this.display === 'chip-group') {
++        return this.renderChipGroup(h)
++      }
++
+       const on = {
+         input: value => this.input(value),
+         change: value => this.change(value)
+       }
+@@ -278,10 +299,11 @@
+         itemValue: this.itemKey,
+         items: this.selectItems,
+         returnObject: this.returnObject
+       }
+-      if (this.fromUrlWithQuery || (this.rawSelectItems && this.rawSelectItems.length > 20)) {
+-        tag = 'v-autocomplete'
++      if (this.fromUrlWithQuery || (this.rawSelectItems && this.rawSelectItems.length > 20) || this.display === 'autocomplete') {
++        tag = 'v-combobox'
++        delete scopedSlots.selection // otherwise it prevents the "chips" prop of  v-autocomplete
+         props.noDataText = this.fullOptions.messages.noData
+         props.placeholder = this.fullOptions.messages.search
+         if (this.fromUrlWithQuery) {
+           props.filter = () => true
+Index: \@koumoul\vjsf\lib\utils\options.js
+===================================================================
+--- \@koumoul\vjsf\lib\utils\options.js
++++ \@koumoul\vjsf\lib\utils\options.js
+@@ -20,8 +20,10 @@
+   selectProps: {},
+   fileInputProps: {},
+   radioGroupProps: {},
+   radioItemProps: {},
++  chipGroupProps: {},
++  chipItemProps: {},
+   tabsProps: { grow: true },
+   expansionPanelsProps: { mandatory: true },
+   dialogProps: { maxWidth: 500 },
+   dialogCardProps: {},
+Index: \@koumoul\vjsf\lib\VJsf.js
+===================================================================
+--- \@koumoul\vjsf\lib\VJsf.js
++++ \@koumoul\vjsf\lib\VJsf.js
+@@ -13,8 +13,9 @@
+   VCardText,
+   VCardTitle,
+   VCheckbox,
+   VChip,
++  VChipGroup,
+   VColorPicker,
+   VCombobox,
+   VContainer,
+   VDatePicker,
+@@ -60,8 +61,9 @@
+     VCardText,
+     VCardTitle,
+     VCheckbox,
+     VChip,
++    VChipGroup,
+     VColorPicker,
+     VCombobox,
+     VContainer,
+     VDatePicker,
